@@ -11,6 +11,10 @@ namespace Library.PerfTest.Tests
     public class ZipCodeStringBuilderVsSpanTest : IPerformanceTest
     {
 
+        public string Command => "Zip";
+
+        public string Description => "Zip Code Format - Substring Vs Span";
+
         [Params("107101234", "10583", "1234567", "107111234")]
         public string ZipFormat { get; set; }
 

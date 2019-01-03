@@ -11,6 +11,10 @@ namespace Library.PerfTest.Tests
     public class AccountingPeriodParse : IPerformanceTest
     {
 
+        public string Command => "AP";
+
+        public string Description => "Accounting Period Parse - Substring Vs Span";
+
         [Params(201801)]
         public int AccountPeriod { get; set; }
 
