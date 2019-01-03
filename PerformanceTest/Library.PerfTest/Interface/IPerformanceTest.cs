@@ -10,6 +10,8 @@ namespace Library.PerfTest.Interface
     /// </summary>
     public interface IPerformanceTest
     {
+        string Command { get; }
+        string Description { get; }
     }
 
 }

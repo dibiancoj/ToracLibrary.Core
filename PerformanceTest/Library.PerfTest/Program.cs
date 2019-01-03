@@ -13,9 +13,7 @@ namespace Library.PerfTest
 
         static void Main(string[] args)
         {
-            var testsFound = typeof(Program).Assembly.GetTypes().Where(x => !x.IsInterface && typeof(IPerformanceTest).IsAssignableFrom(x)).ToList();
-
-            var testToRun = WhichTestToRun(testsFound);
+            var testToRun = WhichTestToRun(AvailableTests());
 
             if (testToRun != null)
             {
@@ -26,32 +24,30 @@ namespace Library.PerfTest
             }
         }
 
-        private static Type WhichTestToRun(IList<Type> availableTests)
+        private static Type WhichTestToRun(IDictionary<string, (Type TestType, string DescriptionOfTest)> availableTests)
         {
             do
             {
                 Console.WriteLine("Please Enter The Test Id You Want To Run");
                 Console.WriteLine("E - Exit");
 
-                int i = 0;
-                foreach (var test in availableTests)
+                foreach (var testConfig in availableTests.OrderBy(x => x.Key))
                 {
-                    Console.WriteLine("{0} - {1}", i, test.Name);
-                    i++;
+                    Console.WriteLine("{0} - {1}", testConfig.Key, testConfig.Value.DescriptionOfTest);
                 }
 
                 var rawTestIdToRun = Console.ReadLine();
 
-                if (int.TryParse(rawTestIdToRun, out var testIdToRun))
-                {
-                    if (testIdToRun >= 0 && testIdToRun < availableTests.Count)
-                    {
-                        return availableTests.ElementAt(testIdToRun);
-                    }
-                }
-                else if (rawTestIdToRun.Equals("e", StringComparison.OrdinalIgnoreCase))
+                if (rawTestIdToRun.Equals("e", StringComparison.OrdinalIgnoreCase))
                 {
                     return null;
+                }
+                else
+                {
+                    if (availableTests.TryGetValue(rawTestIdToRun, out var tryToGetTest))
+                    {
+                        return tryToGetTest.TestType;
+                    }
                 }
 
                 Console.WriteLine(string.Empty);
@@ -59,6 +55,20 @@ namespace Library.PerfTest
                 Console.WriteLine(string.Empty);
 
             } while (true);
+        }
+
+        private static IDictionary<string, (Type TestType, string DescriptionOfTest)> AvailableTests()
+        {
+            var lookup = new Dictionary<string, (Type TestType, string DescriptionOfTest)>(StringComparer.InvariantCultureIgnoreCase);
+
+            foreach (var testType in typeof(Program).Assembly.GetTypes().Where(x => !x.IsInterface && typeof(IPerformanceTest).IsAssignableFrom(x)))
+            {
+                var instanceOfTest = (IPerformanceTest)Activator.CreateInstance(testType);
+
+                lookup.Add(instanceOfTest.Command, (testType, instanceOfTest.Description));
+            }
+
+            return lookup;
         }
 
     }
