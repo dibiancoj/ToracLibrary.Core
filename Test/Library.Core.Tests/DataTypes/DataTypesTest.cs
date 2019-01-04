@@ -13,11 +13,6 @@ namespace Library.Core.Tests.DataTypes
     public class DataTypesTest
     {
 
-        #region Primitive Types
-
-        /// <summary>
-        /// Test Primitive types. All these items should be found in the list
-        /// </summary>
         [InlineData(typeof(string))]
         [InlineData(typeof(bool))]
         [InlineData(typeof(bool?))]
@@ -33,27 +28,22 @@ namespace Library.Core.Tests.DataTypes
         [InlineData(typeof(float?))]
         [InlineData(typeof(decimal))]
         [InlineData(typeof(decimal?))]
-        [Theory]
-        public void PrimitiveTypesTest1(Type TypeToTest)
+        [Theory(DisplayName = "Test Primitive types. All these items should be found in the list")]
+        public void PrimitiveTypesTest1(Type typeToTest)
         {
             //make sure this is in the list
-            Assert.Contains(TypeToTest, PrimitiveTypes.PrimitiveTypeLookup);
+            Assert.Contains(typeToTest, PrimitiveTypes.PrimitiveTypeLookup);
         }
 
-        /// <summary>
-        /// Test Primitive types. All these items should NOT be found in the list
-        /// </summary>
         [InlineData(typeof(IEnumerable<double>))]
         [InlineData(typeof(object))]
         [InlineData(typeof(List<double>))]
-        [Theory]
-        public void PrimitiveTypesTest2(Type TypeToTest)
+        [Theory(DisplayName = "Test Primitive types. All these items should NOT be found in the list")]
+        public void PrimitiveTypesTest2(Type typeToTest)
         {
             //make sure this item is NOT in the list
-            Assert.DoesNotContain(TypeToTest, PrimitiveTypes.PrimitiveTypeLookup);
+            Assert.DoesNotContain(typeToTest, PrimitiveTypes.PrimitiveTypeLookup);
         }
-
-        #endregion
 
     }
 
