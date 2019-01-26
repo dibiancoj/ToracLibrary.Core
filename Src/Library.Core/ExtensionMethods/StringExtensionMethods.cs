@@ -361,11 +361,12 @@ namespace Library.Core.ExtensionMethods
         /// </summary>
         /// <param name="stringToLookThrough">The string to look through for the specific characters</param>
         /// <param name="stringValueToLookFor">String value to find in the StringToLookThrough</param>
+        /// <param name="StringComparisonToUse">String comparison to use</param>
         /// <returns>List of all the index of the StringValueToLookFor.</returns>
-        public static IEnumerable<int> IndexesOfAllLazy(this string stringToLookThrough, string stringValueToLookFor)
+        public static IEnumerable<int> IndexesOfAllLazy(this string stringToLookThrough, string stringValueToLookFor, StringComparison stringComparisonToUse)
         {
             //make sure the string value is not null
-            if (stringToLookThrough.IsNullOrEmpty())
+            if (stringValueToLookFor.IsNullOrEmpty())
             {
                 throw new ArgumentException("The string value is null", "StringValueToLookFor");
             }
@@ -373,31 +374,23 @@ namespace Library.Core.ExtensionMethods
             //return the local function
             return Iterator();
 
+            int GetIndexLogic(int? IndexToStart)
+            {
+                return IndexToStart.HasValue ?
+                        stringToLookThrough.IndexOf(stringValueToLookFor, IndexToStart.Value, stringComparisonToUse) :
+                        stringToLookThrough.IndexOf(stringValueToLookFor, stringComparisonToUse);
+            }
+
             //declare the iterator to run through the results
             IEnumerable<int> Iterator()
             {
-                //working index that we found the item with
-                int? workingIndex = null;
+                int minIndex = GetIndexLogic(null);
 
-                //loop through the string until we are done
-                while (workingIndex >= 0 || !workingIndex.HasValue)
+                while (minIndex != -1)
                 {
-                    //if this is the first element search at 0
-                    if (!workingIndex.HasValue)
-                    {
-                        //Set it to 0
-                        workingIndex = 0;
-                    }
+                    yield return minIndex;
 
-                    //grab the index of for this value
-                    workingIndex = stringToLookThrough.IndexOf(stringValueToLookFor, workingIndex.Value + 1);
-
-                    //if we have a match the return it
-                    if (workingIndex > 0)
-                    {
-                        //return this record
-                        yield return workingIndex.Value;
-                    }
+                    minIndex = GetIndexLogic(minIndex + 1);
                 }
             }
         }

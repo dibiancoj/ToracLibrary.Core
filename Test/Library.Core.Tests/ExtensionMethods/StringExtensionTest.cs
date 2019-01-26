@@ -249,7 +249,7 @@ namespace Library.Core.Tests.ExtensionMethods
             string testLookThroughString = "<html><img src='relative/test.jpg' /><img src='www.google.com' /></html>";
 
             //go run the method
-            var results = testLookThroughString.IndexesOfAllLazy("src='").ToArray();
+            var results = testLookThroughString.IndexesOfAllLazy("src='", StringComparison.OrdinalIgnoreCase).ToArray();
 
             //test this value
             Assert.Equal(2, results.Count());
@@ -257,6 +257,16 @@ namespace Library.Core.Tests.ExtensionMethods
             //test the indexes
             Assert.Contains(results, x => x == 11);
             Assert.Contains(results, x => x == 42);
+        }
+
+        [Fact(DisplayName = "Test to make sure the index of all returns the correct value when there are no matches found")]
+        public void IndexesOfAllLazyTestWithNoMatches()
+        {
+            //test string to look through
+            string TestLookThroughString = "Test 123";
+
+            //go run the method
+            Assert.Empty(TestLookThroughString.IndexesOfAllLazy("Fact", StringComparison.OrdinalIgnoreCase));
         }
 
         #endregion
