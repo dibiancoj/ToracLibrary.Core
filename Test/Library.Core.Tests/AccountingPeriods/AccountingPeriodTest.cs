@@ -23,14 +23,14 @@ namespace Library.Core.Tests.AccountingPeriods
         public void BuildAccountingPeriodObjectIntConstructorTest1(int accountingPeriodToTest, int shouldBeMonth, int shouldBeYear)
         {
             //go run the method and get the results
-            var Result = new AccountingPeriod(accountingPeriodToTest);
+            var result = new AccountingPeriod(accountingPeriodToTest);
 
             //test the month and year
-            Assert.Equal(shouldBeMonth, Result.Month);
-            Assert.Equal(shouldBeYear, Result.Year);
+            Assert.Equal(shouldBeMonth, result.Month);
+            Assert.Equal(shouldBeYear, result.Year);
 
             //make sure the ToAccountingPeriod Works
-            Assert.Equal(Result.ToAccountingPeriod(), accountingPeriodToTest);
+            Assert.Equal(result.ToAccountingPeriod(), accountingPeriodToTest);
         }
 
         [InlineData(12, 2014, 201412)]
@@ -40,14 +40,14 @@ namespace Library.Core.Tests.AccountingPeriods
         public void BuildAccountingPeriodObjectSeperateMonthYearConstructorTest2(int monthToTest, int yearToTest, int shouldBeAccountingPeriod)
         {
             //grab the result
-            var Result = new AccountingPeriod(monthToTest, yearToTest);
+            var result = new AccountingPeriod(monthToTest, yearToTest);
 
             //test the month and year
-            Assert.Equal(monthToTest, Result.Month);
-            Assert.Equal(yearToTest, Result.Year);
+            Assert.Equal(monthToTest, result.Month);
+            Assert.Equal(yearToTest, result.Year);
 
             //make sure the ToAccountingPeriod Works
-            Assert.Equal(Result.ToAccountingPeriod(), shouldBeAccountingPeriod);
+            Assert.Equal(result.ToAccountingPeriod(), shouldBeAccountingPeriod);
         }
 
         [InlineData(201412, 1, 201501)]
